@@ -36,7 +36,7 @@ async function registerCommands(commands: unknown[]) {
 		
 	}
 	catch(err){
-		console.log('errore');
+		console.log('Error');
 		
 		throw err;
 	}

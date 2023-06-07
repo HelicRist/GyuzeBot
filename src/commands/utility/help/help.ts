@@ -1,4 +1,5 @@
-import { Message, SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+import { IContext } from '../../../types/context';
 
 const infos = new SlashCommandBuilder()
 	.setName('help')
@@ -7,7 +8,7 @@ const infos = new SlashCommandBuilder()
 
 const help = {
 	data: infos.toJSON(),
-	async execute(interaction: any){
+	async execute( ctx: IContext, interaction: any){
 		const menu = {
 			color: 0x0099ff,
 			title: 'Help menu',
@@ -22,7 +23,6 @@ const help = {
 				{ name: 'Help', value: 'Display this help menu' }
 			]
 		};
-		console.log(interaction);
 		
 		return await interaction.reply({embeds: [menu]});
 	}

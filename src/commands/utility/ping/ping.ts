@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
+import { IContext } from '../../../types/context';
 
 const infos = new SlashCommandBuilder()
 	.setName('ping')
@@ -7,7 +8,7 @@ const infos = new SlashCommandBuilder()
 
 const ping = {
 	data: infos.toJSON(),
-	async execute(interaction: any) {
+	async execute(ctx: IContext, interaction: any) {
 		return interaction.reply('pong!');
 	}
 };

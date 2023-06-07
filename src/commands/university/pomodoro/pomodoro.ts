@@ -1,4 +1,5 @@
 import { Message, SlashCommandBuilder } from 'discord.js';
+import { IContext } from '../../../types/context';
 
 const infos = new SlashCommandBuilder()
 	.setName('pomodoro')
@@ -7,7 +8,7 @@ const infos = new SlashCommandBuilder()
 
 const pomodoro = {
 	data: infos.toJSON(),
-	async execute(interaction: any) {
+	async execute(ctx: IContext, interaction: any) {
 		return await interaction.reply('pomodoro');
 	}
 };
