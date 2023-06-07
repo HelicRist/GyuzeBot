@@ -1,6 +1,6 @@
 # Gyuze bot
 
-A brief description of what this project does and who it's for
+Gyuze bot is a personal cute discord bot made with discord.js and lot of love
 
 
 ## Authors
