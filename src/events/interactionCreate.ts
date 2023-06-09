@@ -16,6 +16,12 @@ export default function interactionCreate(ctx: IContext, commands: Collection<st
 				console.log(`Error executing the **${interaction.commandName}** command!`);
 				throw err;
 			}
+		}else if(interaction.isButton()){
+			const button =interaction.customId;
+			console.log(button);
+			
+			
+
 		}
 	});
 }
