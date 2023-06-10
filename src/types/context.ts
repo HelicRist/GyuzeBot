@@ -3,6 +3,8 @@ import { Command } from './command';
 
 export interface IContext {
   client: Client;
-  config: object;
+  config: {
+    GUILD_ID: string;
+  };
   commands: Collection<string, Command>;
 }
