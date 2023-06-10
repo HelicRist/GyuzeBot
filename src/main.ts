@@ -7,12 +7,12 @@ import fs from 'fs';
 import path from 'path';
 
 const client = new Client({ intents: [Guilds, MessageContent,GuildVoiceStates, GuildMessages, GuildMembers] });
+const commands = loadCommands();
 const ctx = {
 	client: client,
 	config: JSON.parse(fs.readFileSync(path.resolve(__dirname, '../config.json'), 'utf-8')),
+	commands: commands,
 };
-
-const commands = loadCommands();
 
 interactionCreate(ctx, commands);
 

@@ -1,9 +1,7 @@
-/* eslint-disable quotes */
-/* eslint-disable prefer-const */
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Message, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
-import { IContext } from '../../../types/context';
-import { VoiceConnectionStatus, DiscordGatewayAdapterCreator, getVoiceConnection } from '@discordjs/voice';
-import { createAudioResource, StreamType, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
+import { IContext } from '../../types/context';
+import {DiscordGatewayAdapterCreator } from '@discordjs/voice';
+import { createAudioResource, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
 import { join } from 'node:path';
 
 // /pomodoro studyTime pauseTime - bot get in vc - play chill music - /media/audio/pause and study
@@ -15,7 +13,7 @@ const infos = new SlashCommandBuilder()
 	.setDescription('pomodoro ')
 	.setDefaultMemberPermissions(0)
 
-	.setDescription('Start the pomodori timer.')
+	.setDescription('Start the pomodoro timer.')
 	.addChannelOption(option =>
 		option.setName('study_channel')
 
@@ -29,55 +27,41 @@ const infos = new SlashCommandBuilder()
 			.setDescription('Set amount of study in minutes')
 			.setRequired(false)
 			.setMinValue(1)
-			.setMaxValue(60))
+			.setMaxValue(120))
 	.addIntegerOption(option =>
 		option.setName('relax_time')
 
 			.setDescription('Set amount of the relax time in minutes')
 			.setRequired(false)
 			.setMinValue(1)
-			.setMaxValue(30)
-	)
-	;
+			.setMaxValue(60)
+	);
 
 //Command
 const pomodoro = {
 	data: infos.toJSON(),
 	async execute(ctx: IContext, interaction: any) {
-		let timeoutID: NodeJS.Timeout;
-
-
 		startComand();
-		async function startComand() {
+		async function startComand(){
+
+			const player = createAudioPlayer();
+			const studyTime = typeof interaction.options._hoistedOptions[1]?.value !=='undefined' ? interaction.options._hoistedOptions[1]:45  ;
+			const relaxTime = (typeof interaction.options._hoistedOptions[2]?.value  !=='undefined' )? interaction.options._hoistedOptions[2]:7  ;
 
 			let pomodoriCounter = 0;
 			pomodoriCounter++;
-			const studyTime = (typeof interaction.options._hoistedOptions[1]?.value !== 'undefined') ? interaction.options._hoistedOptions[1].value : 45;
-			const relaxTime = (typeof interaction.options._hoistedOptions[2]?.value !== 'undefined') ? interaction.options._hoistedOptions[2].value : 7;
-			const player = createAudioPlayer();
-
-			// const connection = getVoiceConnection( interaction.member.guild.id);
-			const connection= joinVoiceChannel({
+			const connection = joinVoiceChannel({
 				channelId: interaction.options._hoistedOptions[0].value,
 				guildId: interaction.member.guild.id,
 				adapterCreator: interaction.member.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator //ctx?.client?.guilds?.cache?.get((guildId))?.voiceAdapterCreator //@tts-ignore
 			});
-			const subscription = connection.subscribe(player);
-
 
 			//fix this
-			connection?.on(VoiceConnectionStatus.Ready, () => {
-				console.log('Ready');
-				
-				const resource = createAudioResource(join(__dirname, '../../../public/audio/study.mp3'), { inlineVolume: true });
-				console.log(join(__dirname, '../../../public/audio/study.mp3'));
-				
-				resource.volume?.setVolume(0.5);
-				player.play(resource);
 
-			});
+			const resource = createAudioResource(join(__dirname, 'study.mp3'), { inlineVolume: true });
+			resource.volume?.setVolume(0.5);
+			player.play(resource);
 
-			
 			// delayedMessage();
 			// clearMessage();
 
@@ -89,11 +73,8 @@ const pomodoro = {
 			const pause = new ButtonBuilder()
 				.setCustomId('pause_resume')
 				.setLabel('⏸/⏵')
-				.setStyle(ButtonStyle.Primary);
-			const getTime = new ButtonBuilder()
-				.setCustomId('get_time')
-				.setLabel('⏳')
-				.setStyle(ButtonStyle.Success);
+				.setStyle(ButtonStyle.Primary );
+
 			const selectMusic = new StringSelectMenuBuilder()
 				.setCustomId('music')
 				.setPlaceholder('Choose your music!')
@@ -108,49 +89,33 @@ const pomodoro = {
 						.setValue('games'));
 
 			const rowTimer = new ActionRowBuilder()
-				.addComponents(pause, getTime, end,);
+				.addComponents(pause, end);
 			const rowMusic = new ActionRowBuilder()
 				.addComponents(selectMusic);
 			const startMessage = {
-				color: 0xD000D0,
-				title: 'Study Time! <#' + interaction.options._hoistedOptions[0].channel + '>',
+				color: 0xD000D0 ,
+				title: 'Study Time! <#' + interaction.options._hoistedOptions[0].channel+'>',
 				author: {
 					name: 'Rimaro03, Heldin',
 					iconURL: 'https://www.iconspng.com/uploads/gyoza-colour/gyoza-colour.png',
 					url: 'https://github.com/HelicRist/GyuzeBot'
 				},
-				description: 'Study with <@' + interaction.member + '>\nPomodori counter: ( ' + pomodoriCounter + ' /? )',
+				description: 'Pomodori counter: ( '  +pomodoriCounter+' /? )',
 				thumbnail: { url: 'https://www.iconspng.com/uploads/gyoza-colour/gyoza-colour.png' },
 				fields: [
-					{ name: 'Study time ', value: studyTime.toString() + ' minutes' },
-					{ name: 'Relax time ', value: relaxTime.toString() + ' minutes' }
+					{ name: 'Study time ', value: studyTime.toString() +' minutes' },
+					{ name: 'Relax time ', value: relaxTime.toString() +' minutes'}
 				]
 			};
-			timer(studyTime, relaxTime);
+			console.log(interaction);
 
+			
+			await interaction
+				.reply({
+					embeds: [startMessage],
+					components:[rowMusic,rowTimer,],
 
-			// await interaction
-			// 	.reply({
-			// 		embeds: [startMessage],
-			// 		components: [rowMusic, rowTimer,],
-
-			// 	});
-		}
-		async function timer(studyTime: number, relaxTime: number) {
-			const m = studyTime % 60;
-			const d = new Date();
-			let time = d.getTime();
-			const st = setInterval(async () => {
-				
-				console.log();
-
-
-				const re = setTimeout(async () => {
-					console.log();
-					
-					
-				}, relaxTime * 1000);
-			}, studyTime * 1000);
+				});
 		}
 		return; //await interaction.reply('pomodoro');
 	}

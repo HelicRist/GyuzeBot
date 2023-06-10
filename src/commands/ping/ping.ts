@@ -1,16 +1,16 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { IContext } from '../../../types/context';
+import { IContext } from '../../types/context';
 
 const infos = new SlashCommandBuilder()
-	.setName('button')
-	.setDescription('return button')
+	.setName('ping')
+	.setDescription('pong the pings')
 	.setDefaultMemberPermissions(0);
 
-const buttons = {
+const ping = {
 	data: infos.toJSON(),
 	async execute(ctx: IContext, interaction: any) {
-		return interaction.reply('BTN!');
+		return interaction.reply('pong!');
 	}
 };
 
-export default buttons;
+export default ping;
