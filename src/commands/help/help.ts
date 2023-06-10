@@ -1,6 +1,6 @@
 import { Collection, SlashCommandBuilder } from 'discord.js';
-import { IContext } from '../../../types/context';
-import { Command } from '../../../types/command';
+import { IContext } from '../../types/context';
+import { Command } from '../../types/command';
 
 const infos = new SlashCommandBuilder()
 	.setName('help')
@@ -33,7 +33,6 @@ const getCommands = (commands: Collection<string, Command>) => {
 		const item = {
 			name: command.data.name.toUpperCase(),
 			value: ' `' + `/${command.data.name}`+'`'+`\n${command.data.description}`,
-			inline: true
 		};
 		fields.push(item);
 	});

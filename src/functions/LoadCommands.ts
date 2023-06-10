@@ -8,16 +8,13 @@ export default function loadCommands() {
 	const commands = new Collection<string, Command>();
 
 	const commandsPath = path.resolve(__dirname, '../commands');
-	const categories = fs.readdirSync(commandsPath);
 
-	for(const category of categories){
-		const commandFolders = fs.readdirSync(`${commandsPath}/${category}`);
-		for(const commandFolder of commandFolders){
-			// eslint-disable-next-line @typescript-eslint/no-var-requires
-			const command = require(`${commandsPath}/${category}/${commandFolder}/${commandFolder}`).default;
-			commands.set(command.data.name, command);
-			slashCommands.push(command.data);
-		}
+	const commandFolders = fs.readdirSync(`${commandsPath}`);
+	for(const commandFolder of commandFolders){
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const command = require(`${commandsPath}/${commandFolder}/${commandFolder}`).default;
+		commands.set(command.data.name, command);
+		slashCommands.push(command.data);
 	}
 	registerCommands(slashCommands);
 	return commands;

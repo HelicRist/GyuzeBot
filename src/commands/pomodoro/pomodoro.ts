@@ -1,9 +1,8 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, Message, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
-import { IContext } from '../../../types/context';
-import {VoiceConnectionStatus, DiscordGatewayAdapterCreator, getVoiceConnection } from '@discordjs/voice';
-import { createAudioResource, StreamType, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from 'discord.js';
+import { IContext } from '../../types/context';
+import {DiscordGatewayAdapterCreator } from '@discordjs/voice';
+import { createAudioResource, createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
 import { join } from 'node:path';
-import cron from 'node-cron';
 
 // /pomodoro studyTime pauseTime - bot get in vc - play chill music - /media/audio/pause and study
 // stop 	-pause the timer
@@ -14,7 +13,7 @@ const infos = new SlashCommandBuilder()
 	.setDescription('pomodoro ')
 	.setDefaultMemberPermissions(0)
 
-	.setDescription('Start the pomodori timer.')
+	.setDescription('Start the pomodoro timer.')
 	.addChannelOption(option =>
 		option.setName('study_channel')
 
@@ -36,38 +35,13 @@ const infos = new SlashCommandBuilder()
 			.setRequired(false)
 			.setMinValue(1)
 			.setMaxValue(60)
-	)
-	;
+	);
 
 //Command
 const pomodoro = {
 	data: infos.toJSON(),
 	async execute(ctx: IContext, interaction: any) {
-		let timeoutID: NodeJS.Timeout;
-
-		function delayedMessage() {
-			// console.log('First: ' + timeoutID);
-
-			timeoutID = setTimeout(setOutput, 20 * 1000, 'That was really slow!');
-			// console.log('After assign: ' + timeoutID);
-
-		}
-		function clearMessage() {
-			console.log('When clear: ' + timeoutID);
-
-			clearTimeout(timeoutID);
-		}
-
-		function setOutput(out:string){
-			console.log(out);
-
-		}
-		//Subcommands division
-
 		startComand();
-
-
-
 		async function startComand(){
 
 			const player = createAudioPlayer();
