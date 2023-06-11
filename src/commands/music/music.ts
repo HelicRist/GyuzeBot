@@ -31,6 +31,12 @@ const infos = new SlashCommandBuilder()
 			.setName('song')
 			.setDescription('song name')
 			.setRequired(true)))
+	.addSubcommand(subcommand => subcommand //subsitute with button
+		.setName('pause')
+		.setDescription('Pause the current song')) //subsitute with button
+	.addSubcommand(subcommand => subcommand
+		.setName('resume')
+		.setDescription('Resume the current song'))
 	.addSubcommand(subcommand => subcommand
 		.setName('queue')
 		.setDescription('show the queue'))
@@ -58,19 +64,13 @@ const infos = new SlashCommandBuilder()
 
 const music = {
 	data: infos.toJSON(),
-	async execute(ctx: IContext, interaction: any) {
-		const player = createAudioPlayer({
-			behaviors: {
-				noSubscriber: NoSubscriberBehavior.Play
-			}
-		});
-        
+	async execute(ctx: IContext, interaction: any) {      
 		const subcommand = interaction.options.getSubcommand();
 		const subCommandPath = path.join(__dirname, './subcommands');
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const command = require(`${subCommandPath}/${subcommand}`).default;
 		const song = interaction.options.getString('song');
-		command.execute({ctx, interaction, song, player});
+		command.execute({ctx, interaction, song, player: ctx.player});
 		return;
 	}
 };
