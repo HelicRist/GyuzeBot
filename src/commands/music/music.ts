@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
 import path from 'path';
 import { IContext } from '../../types/context';
-import { NoSubscriberBehavior, createAudioPlayer } from '@discordjs/voice';
 
 /**
  * BUTTONS
@@ -19,7 +18,6 @@ import { NoSubscriberBehavior, createAudioPlayer } from '@discordjs/voice';
  * /music queue
  */
 
-
 const infos = new SlashCommandBuilder()
 	.setName('music')
 	.setDefaultMemberPermissions(0)
@@ -30,7 +28,7 @@ const infos = new SlashCommandBuilder()
 		.addStringOption(option => option
 			.setName('song')
 			.setDescription('song name')
-			.setRequired(true)))
+			.setRequired(false)))
 	.addSubcommand(subcommand => subcommand //subsitute with button
 		.setName('pause')
 		.setDescription('Pause the current song')) //subsitute with button
@@ -61,7 +59,6 @@ const infos = new SlashCommandBuilder()
 		.setName('lyrics')
 		.setDescription('show the lyrics of the current song'));
 
-
 const music = {
 	data: infos.toJSON(),
 	async execute(ctx: IContext, interaction: any) {      
@@ -70,7 +67,9 @@ const music = {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const command = require(`${subCommandPath}/${subcommand}`).default;
 		const song = interaction.options.getString('song');
-		command.execute({ctx, interaction, song, player: ctx.player});
+		console.log(song);
+		
+		command.execute({ctx, interaction, song, player: ctx.music.player, queue: ctx.music.queue});
 		return;
 	}
 };

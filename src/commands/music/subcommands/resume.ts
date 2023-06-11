@@ -1,11 +1,13 @@
 import { AudioPlayer } from '@discordjs/voice';
 import { IContext } from '../../../types/context';
+import { YouTubeVideo } from 'play-dl';
 
 interface Iargs {
 	ctx: IContext;
 	interaction: any;
 	song: string;
 	player: AudioPlayer;
+	queue: YouTubeVideo[];
 }
 
 const resume = {
