@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@discordjs/voice';
+import { AudioPlayer, AudioPlayerStatus } from '@discordjs/voice';
 import { IContext } from '../../../types/context';
 import { YouTubeVideo } from 'play-dl';
 
@@ -13,7 +13,7 @@ interface Iargs {
 const resume = {
 	async execute(args: Iargs) {
 		const { interaction, player } = args;
-		if(player.state.status !== 'paused') return await interaction.reply('Nothing is paused');
+		if(player.state.status !== AudioPlayerStatus.Paused) return await interaction.reply('Nothing is paused');
 		
 		player.unpause();
 		return await interaction.reply('Resumed');

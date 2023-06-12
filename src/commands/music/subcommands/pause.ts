@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@discordjs/voice';
+import { AudioPlayer, AudioPlayerStatus } from '@discordjs/voice';
 import { IContext } from '../../../types/context';
 import { YouTubeVideo } from 'play-dl';
 
@@ -13,7 +13,7 @@ interface Iargs {
 const pause = {
 	async execute(args: Iargs) {
 		const { interaction, player } = args;
-		console.log(player);
+		if(player.state.status === AudioPlayerStatus.Idle) return await interaction.reply('Nothing is playing');
 		player.pause(true);
 		return await interaction.reply('Paused');
 	}

@@ -1,4 +1,4 @@
-import { AudioPlayer } from '@discordjs/voice';
+import { AudioPlayer, AudioPlayerStatus } from '@discordjs/voice';
 import { IContext } from '../../../types/context';
 import { YouTubeVideo } from 'play-dl';
 
@@ -13,7 +13,7 @@ const stop = {
 	async execute(args: Iargs) {
 		const { interaction, player } = args;
 		
-		if(player.state.status === 'idle') return await interaction.reply('Nothing is playing');
+		if(player.state.status === AudioPlayerStatus.Idle) return await interaction.reply('Nothing is playing');
 		player.stop();
         
 		return await interaction.reply('Stopped');

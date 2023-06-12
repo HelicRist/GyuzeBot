@@ -20,16 +20,18 @@ const skip = {
 		if(player.state.status === 'idle') return await interaction.reply('Nothing is playing');
         
 		if(queue.length === 0) {
-			return await interaction.reply('Queue is empty');
+			player.stop();
+		}
+		else{
+			const streamer = await stream(queue.shift()?.url as string);
+	
+			const resource = createAudioResource(streamer.stream, {
+				inputType: streamer.type
+			});
+			player.play(resource);        
 		}
 
-		const streamer = await stream(queue.shift()?.url as string);
-	
-		const resource = createAudioResource(streamer.stream, {
-			inputType: streamer.type
-		});
-		player.play(resource);        
-		return await interaction.reply('Removed');
+		return await interaction.reply('Skipped');
 	}
 };
 
