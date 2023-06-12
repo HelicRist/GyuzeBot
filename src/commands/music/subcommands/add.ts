@@ -16,7 +16,26 @@ const add = {
 			limit: 1
 		});
 		queue.push(yt_info[0]);
-		return await interaction.reply('Added');
+		const songEmbed = {
+			color: 0x0099ff,
+			title: 'Added to queue',
+			description: yt_info[0].title,
+			fields: [
+				{
+					name: 'Author',
+					value: yt_info[0].channel?.name,
+				},
+				{
+					name: 'Duration',
+					value: yt_info[0].durationRaw,
+				}
+			],
+			authror: {
+				name: yt_info[0].channel?.name,
+			},
+			thumbnail: { url: yt_info[0].thumbnails[0].url },
+		};
+		return await interaction.reply({ embeds: [songEmbed] });
 	}
 };
 

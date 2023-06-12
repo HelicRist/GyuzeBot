@@ -90,13 +90,17 @@ const music = {
 		player.on('stateChange', async(oldState, newState) => {
 			if (newState.status === AudioPlayerStatus.Idle) {
 				if (oldState.status === AudioPlayerStatus.Playing) {
-					if (!interaction.data && ctx.music.queue.length > 0) {						
+					//1: canzone finita
+					//2: /music
+					if (!interaction.options.getSubcommand() && ctx.music.queue.length > 0) {					
+						console.log(interaction);
 						const streamer = await stream(ctx.music.queue.shift()?.url as string);
 						const resource = createAudioResource(streamer.stream, {
 							inputType: streamer.type
 						});
 						player.play(resource);  
 					}
+					console.log('outsite');
 				}
 			}
 		});
