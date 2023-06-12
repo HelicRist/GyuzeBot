@@ -10,11 +10,11 @@ const infos = new SlashCommandBuilder()
 const cmdremove = {
 	data: infos.toJSON(),
 	async execute(ctx: IContext, interaction: any) {
-		if(interaction.user.id !== process.env.RIMARO_ID! || interaction.user.id !== process.env.RIMARO_ID!){
+		if(interaction.user.id != process.env.RIMARO_ID && interaction.user.id != process.env.HELDIN_ID){
 			return interaction.reply('You don\'t have the permission to use this command!');
 		}
 		const rest = new REST().setToken(process.env.TOKEN!);
-		rest.delete(Routes.applicationGuildCommand(process.env.CLIENT_ID!, process.env.GUILD_ID!, interaction.options.getString('id')!))
+		rest.delete(Routes.applicationGuildCommand(process.env.CLIENT_ID!, interaction.guildId, interaction.options.getString('id')!))
 			.then(() => {
 				console.log('Successfully deleted guild command');
 				return interaction.reply('Successfully deleted guild command!');
