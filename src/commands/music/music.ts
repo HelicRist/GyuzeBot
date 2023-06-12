@@ -29,6 +29,19 @@ const infos = new SlashCommandBuilder()
 			.setName('song')
 			.setDescription('song name')
 			.setRequired(false)))
+	.addSubcommand(subcommand => subcommand
+		.setName('add')
+		.setDescription('add a song to the queue')
+		.addStringOption(option => option
+			.setName('song')
+			.setDescription('song name')
+			.setRequired(true)))
+	.addSubcommand(subcommand => subcommand
+		.setName('stop')
+		.setDescription('stop the current song'))
+	.addSubcommand(subcommand => subcommand
+		.setName('skip')
+		.setDescription('skip the current song'))
 	.addSubcommand(subcommand => subcommand //subsitute with button
 		.setName('pause')
 		.setDescription('Pause the current song')) //subsitute with button
@@ -44,9 +57,9 @@ const infos = new SlashCommandBuilder()
 	.addSubcommand(subcommand => subcommand
 		.setName('remove')
 		.setDescription('remove a song from the queue')
-		.addIntegerOption(option => option
+		.addStringOption(option => option
 			.setName('song')
-			.setDescription('song number')
+			.setDescription('song name')
 			.setRequired(true)))
 //forse
 	.addSubcommand(subcommand => subcommand

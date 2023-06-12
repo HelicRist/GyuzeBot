@@ -1,4 +1,4 @@
-import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits } from 'discord.js';
 const { Guilds, MessageContent, GuildMessages, GuildMembers, GuildVoiceStates } = GatewayIntentBits;
 import 'dotenv/config';
 import loadCommands from './functions/LoadCommands';

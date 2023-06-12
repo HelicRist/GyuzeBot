@@ -9,15 +9,20 @@ interface Iargs {
 	player: AudioPlayer;
 	queue: YouTubeVideo[];
 }
-const add = {
+const remove = {
 	async execute(args: Iargs) {
 		const { interaction, queue, song } = args;
 		const yt_info = await search(song, {
 			limit: 1
 		});
-		queue.push(yt_info[0]);
-		return await interaction.reply('Added');
+		queue.find((v, i) => {
+			if(v.id === yt_info[0].id) {
+				queue.splice(i, 1);
+			}
+		});
+        
+		return await interaction.reply({ content: 'Removed' });
 	}
 };
 
-export default add;
+export default remove;
