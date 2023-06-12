@@ -17,7 +17,6 @@ First, install all required npm packages
   yarn
 ```
 Second, compile typescript
-
 ```bash
   yarn build
 ```
@@ -25,4 +24,9 @@ Second, compile typescript
 Finally, run
 ```bash
   yarn start
+```
+
+Alternatively, to build & run:
+```bash
+  yarn run dev
 ```
