@@ -63,13 +63,10 @@ const infos = new SlashCommandBuilder()
 			.setName('song')
 			.setDescription('song name')
 			.setRequired(true)))
-//forse
 	.addSubcommand(subcommand => subcommand
 		.setName('shuffle')
 		.setDescription('shuffle the queue'))
-	.addSubcommand(subcommand => subcommand
-		.setName('nowplaying')
-		.setDescription('show the current song'))
+//forse
 	.addSubcommand(subcommand => subcommand
 		.setName('lyrics')
 		.setDescription('show the lyrics of the current song'));
@@ -93,9 +90,8 @@ const music = {
 		player.on('stateChange', async(oldState, newState) => {
 			if (newState.status === AudioPlayerStatus.Idle) {
 				if (oldState.status === AudioPlayerStatus.Playing) {
-					if (interaction && interaction.data.name !== 'stop' && ctx.music.queue.length > 0) {
+					if (!interaction.data && ctx.music.queue.length > 0) {						
 						const streamer = await stream(ctx.music.queue.shift()?.url as string);
-	
 						const resource = createAudioResource(streamer.stream, {
 							inputType: streamer.type
 						});
