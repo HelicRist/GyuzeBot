@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from 'discord.js';
 import path from 'path';
 import { IContext } from '../../types/context';
+import { AudioPlayerStatus, createAudioResource } from '@discordjs/voice';
+import { stream } from 'play-dl';
 
 /**
  * BUTTONS
@@ -80,7 +82,28 @@ const music = {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const command = require(`${subCommandPath}/${subcommand}`).default;
 		const song = interaction.options.getString('song');
-		console.log(song);
+		
+		const player = ctx.music.player;
+
+		player.on('error', error => {
+			console.error(`Error: ${error.message} with resource ${error.resource.metadata}`);
+			player.stop();
+		});
+
+		player.on('stateChange', async(oldState, newState) => {
+			if (newState.status === AudioPlayerStatus.Idle) {
+				if (oldState.status === AudioPlayerStatus.Playing) {
+					if (interaction && interaction.data.name !== 'stop' && ctx.music.queue.length > 0) {
+						const streamer = await stream(ctx.music.queue.shift()?.url as string);
+	
+						const resource = createAudioResource(streamer.stream, {
+							inputType: streamer.type
+						});
+						player.play(resource);  
+					}
+				}
+			}
+		});
 		
 		command.execute({ctx, interaction, song, player: ctx.music.player, queue: ctx.music.queue});
 		return;
