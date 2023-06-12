@@ -1,6 +1,6 @@
 import { AudioPlayer } from '@discordjs/voice';
 import { IContext } from '../../../types/context';
-import { YouTubeVideo } from 'play-dl';
+import { YouTubeVideo, search } from 'play-dl';
 
 interface Iargs {
 	ctx: IContext;
@@ -9,14 +9,14 @@ interface Iargs {
 	player: AudioPlayer;
 	queue: YouTubeVideo[];
 }
-
-const pause = {
+const clear = {
 	async execute(args: Iargs) {
-		const { interaction, player } = args;
-		console.log(player);
-		player.pause(true);
-		return await interaction.reply('Paused');
+		const { interaction, queue } = args;
+		
+		queue.length = 0;
+        
+		return await interaction.reply('Queue cleared');
 	}
 };
 
-export default pause;
+export default clear;

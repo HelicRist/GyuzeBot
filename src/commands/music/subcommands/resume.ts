@@ -13,8 +13,10 @@ interface Iargs {
 const resume = {
 	async execute(args: Iargs) {
 		const { interaction, player } = args;
+		if(player.state.status !== 'paused') return await interaction.reply('Nothing is paused');
+		
 		player.unpause();
-		return await interaction.reply({ content: 'Resumed' });
+		return await interaction.reply('Resumed');
 	}
 };
 

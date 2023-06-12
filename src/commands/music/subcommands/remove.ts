@@ -21,7 +21,7 @@ const remove = {
 			}
 		});
         
-		return await interaction.reply({ content: 'Removed' });
+		return await interaction.reply('Removed');
 	}
 };
 

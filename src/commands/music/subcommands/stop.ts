@@ -9,14 +9,15 @@ interface Iargs {
 	player: AudioPlayer;
 	queue: YouTubeVideo[];
 }
-
-const pause = {
+const stop = {
 	async execute(args: Iargs) {
 		const { interaction, player } = args;
-		console.log(player);
-		player.pause(true);
-		return await interaction.reply('Paused');
+		
+		if(player.state.status === 'idle') return await interaction.reply('Nothing is playing');
+		player.stop();
+        
+		return await interaction.reply('Stopped');
 	}
 };
 
-export default pause;
+export default stop;

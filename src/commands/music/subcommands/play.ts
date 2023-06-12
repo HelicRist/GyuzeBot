@@ -15,27 +15,39 @@ const play = {
 	async execute(args: Iargs) {
 		const { ctx, interaction, song, player, queue } = args;
 
-		const yt_info = await search(song, {
+		if(interaction.member.voice.channelId === null) {
+			return await interaction.reply('You are not in a voice channel');
+		}
+
+		let songPlayer;
+		if(song == null){
+			if(queue.length === 0) {
+				return await interaction.reply('Queue is empty');
+			}
+			songPlayer = queue.shift()?.url as string;
+		}
+		else{
+			songPlayer = song;
+		}
+
+		const yt_info = await search(songPlayer, {
 			limit: 1
 		});
-		
-		queue.push(yt_info[0]);
-		if(ctx.client.voice.adapters.size > 0) {
-			const connection = joinVoiceChannel({
-				channelId: interaction.member.voice.channelId,
-				guildId: ctx.config.GUILD_ID,
-				adapterCreator: interaction.member.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
-			});
+				
+		const connection = joinVoiceChannel({
+			channelId: interaction.member.voice.channelId,
+			guildId: ctx.config.GUILD_ID,
+			adapterCreator: interaction.member.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
+		});
 	
-			const streamer = await stream(yt_info[0].url);
+		const streamer = await stream(yt_info[0].url);
 	
-			const resource = createAudioResource(streamer.stream, {
-				inputType: streamer.type
-			});
-			resource.volume?.setVolume(0.5);
-			player.play(resource);
-			connection.subscribe(player);
-		}
+		const resource = createAudioResource(streamer.stream, {
+			inputType: streamer.type
+		});
+		resource.volume?.setVolume(0.5);
+		player.play(resource);
+		connection.subscribe(player);
         
 		const songEmbed = {
 			color: 0x0099ff,
